@@ -1,10 +1,14 @@
 package com.example.demo.dao;
 
+import com.example.demo.exception.ItemException;
 import com.example.demo.model.Item;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ItemDao {
 
     private static List<Item> items = new ArrayList<>();
@@ -18,24 +22,29 @@ public class ItemDao {
         items.add(new Item("6", "item 6", "item 6 description", 17.0));
     }
 
-    public void addItem(Item item) {
+    public void addItem(Item item) throws ItemException {
+        for (Item item1 : items) {
+            if (item1.getId().equals(item.getId())) {
+                throw new ItemException("There is already an item with id: " + item.getId());
+            }
+        }
         items.add(item);
     }
 
-    public Item getItem(String id) {
+    public Item getItem(String id) throws ItemException {
         for (Item item : items) {
             if (item.getId().equals(id)) {
                 return item;
             }
         }
-        return null;
+        throw new ItemException("There is no items with specified id: " + id);
     }
 
     public List<Item> getAllItems() {
         return items;
     }
 
-    public void updateItem(Item item) {
+    public void updateItem(Item item) throws ItemException {
         for (Item item1 : items) {
             if (item.getId().equals(item1.getId())) {
                 item1.setDesc(item.getDesc());
@@ -43,14 +52,16 @@ public class ItemDao {
                 item1.setPrice(item.getPrice());
             }
         }
+        throw new ItemException("There is no items with specified id: " + item.getId());
     }
 
-    public void deleteItem(String id) {
+    public void deleteItem(String id) throws ItemException {
         for (Item item : items) {
             if (item.getId().equals(id)) {
-                return;
+                items.remove(item);
             }
         }
+        throw new ItemException("There is no items with specified id: " + id);
     }
 
 }
