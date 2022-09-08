@@ -50,6 +50,7 @@ public class ItemDao {
                 item1.setDesc(item.getDesc());
                 item1.setName(item.getName());
                 item1.setPrice(item.getPrice());
+                return;
             }
         }
         throw new ItemException("There is no items with specified id: " + item.getId());
@@ -59,6 +60,7 @@ public class ItemDao {
         for (Item item : items) {
             if (item.getId().equals(id)) {
                 items.remove(item);
+                return;
             }
         }
         throw new ItemException("There is no items with specified id: " + id);
